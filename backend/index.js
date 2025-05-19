@@ -20,7 +20,7 @@ app.use(express.json());
 // Test route to fetch data from Supabase
 app.get('/test-connection', async (req, res) => {
   try {
-    const { data, error } = await supabase.from('your_table_name').select('*');
+    const { data, error } = await supabase.from('products').select('*'); // Use the 'products' table
     if (error) throw error;
     res.json({ success: true, data });
   } catch (error) {
@@ -33,4 +33,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
 });
+
 
