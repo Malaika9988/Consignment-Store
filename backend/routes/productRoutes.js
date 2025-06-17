@@ -1,15 +1,25 @@
 const express = require('express');
-const { getAllProducts, addProduct, testConnection } = require('../controller/productController');
+const {
+  testConnection,
+  addConsignor,
+  getAllProducts,
+  addProduct
+} = require('../controllers/productController');
 
 const router = express.Router();
 
-// Route to fetch all products
-router.get('/', getAllProducts);
-
-// Route to add a product
-router.post('/add-product', addProduct);
-
-// Route to test database connection
+// Health‑check
 router.get('/test-connection', testConnection);
 
+// Add a consignor
+router.post('/add-consignor', addConsignor);
+
+// List all products
+router.get('/', getAllProducts);
+
+// Add a product
+router.post('/add-product', addProduct);
+
 module.exports = router;
+
+

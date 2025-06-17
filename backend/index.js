@@ -1,26 +1,21 @@
 require('dotenv').config();
 const express = require('express');
 const productRoutes = require('./routes/productRoutes');
-const errorHandler = require('./middlewares/errorHandler');
+const errorHandler  = require('./middlewares/errorHandler');
 
 const app = express();
 const PORT = process.env.PORT || 8000;
 
-// Middleware to parse JSON
+// Parse JSON bodies
 app.use(express.json());
 
-// Root Route
-app.get('/', (req, res) => {
-  res.send('Welcome to the API! Use /api/products for API routes.');
-});
-
-// Mount Product Routes
+// Mount all routes under /api/products
 app.use('/api/products', productRoutes);
 
-// Error Handling Middleware
+// Global error handler
 app.use(errorHandler);
 
-// Start the server
+// Start server
 app.listen(PORT, () => {
-  console.log(`Backend server running on http://localhost:${PORT}`);
+  console.log(`Server running: http://localhost:${PORT}`);
 });
