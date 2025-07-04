@@ -1,31 +1,48 @@
-// routes/productRoutes.js
+// backend/routes/productRoutes.js
 
 const express = require('express');
+const router = express.Router();
+
+// Destructure functions from productController
 const {
     testConnection,
     addConsignor,
+    getAllConsignors,
+    getConsignorById,
+    updateConsignor,
+    deleteConsignor,
     getAllProducts,
     addProduct,
-    updateProductLocation // Assuming you might use this later
+    updateProduct,
+    deleteProduct,
+    getAllProductsEligibleForSale,
+    updateProductLocationAndStatus,
+    getProductByBarcode, // ✅ Added
 } = require('../controllers/productController');
 
-const router = express.Router();
-
-// Health-check
+// --- Health Check Route ---
 router.get('/test-connection', testConnection);
 
-// Add a consignor (e.g., POST to /api/products/add-consignor)
+// --- Consignor Routes ---
 router.post('/add-consignor', addConsignor);
+router.get('/consignors', getAllConsignors);
+router.get('/consignors/:id', getConsignorById);
+router.put('/consignors/:id', updateConsignor);
+router.delete('/consignors/:id', deleteConsignor);
 
-// List all products (GET /api/products)
+// --- Product Routes ---
+
+// ✅ Route to get product by barcode (Place before any "/:id" routes)
+router.get('/barcode/:barcode', getProductByBarcode);
+
+// ✅ Route to get eligible products for sale
+router.get('/eligible-for-sale', getAllProductsEligibleForSale);
+
+// Basic CRUD
 router.get('/', getAllProducts);
-
-// Add a product (POST /api/products) - THIS IS THE KEY CHANGE
-router.post('/', addProduct); // Changed from '/add-product' to '/'
-
-// Update product location (e.g., PUT /api/products/:id/location)
-// Assuming you'll implement this fully later
-router.put('/:id/location', updateProductLocation);
-
+router.post('/', addProduct);
+router.put('/:id', updateProduct);
+router.put('/:id/location', updateProductLocationAndStatus);
+router.delete('/:id', deleteProduct);
 
 module.exports = router;

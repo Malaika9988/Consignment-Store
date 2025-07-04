@@ -1,5 +1,3 @@
-// middlewares/errorHandler.js
-
 const errorHandler = (err, req, res, next) => {
     console.error(`[ERROR] ${new Date().toISOString()} - ${err.message}`);
     console.error(err.stack); // Log the stack trace for debugging

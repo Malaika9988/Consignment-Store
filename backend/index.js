@@ -1,34 +1,41 @@
+// index.js
 require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const cors = require('cors'); // Import the CORS middleware
-const productRoutes = require('./routes/productRoutes'); // Your product-specific routes
-const errorHandler = require('./middlewares/errorHandler'); // Your global error handler middleware (assuming you have one)
+const productRoutes = require('./routes/productRoutes');
+const saleRoutes = require('./routes/saleRoutes');
+const reportRoutes = require('./routes/reportRoutes'); // <--- NEW: Import reportRoutes
+const agreementRoutes = require('./routes/agreementRoutes'); // ✨ NEW: Import agreementRoutes ✨
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
-const PORT = process.env.PORT || 8000; // Use port from .env or default to 8000
+// --- CRITICAL FIX 1: Use PORT from .env file (now 5000) ---
+// This will now correctly use the PORT defined in your .env file
+const PORT = process.env.PORT || 8000; // Fallback to 8000 if .env isn't set, but ensure your .env has PORT=8000
 
 // --- MIDDLEWARE ---
-
-// Enable CORS for all origins.
+// IMPORTANT: Make sure CORS allows your frontend's origin if they are on different domains/ports.
+// Since frontend is 8080 and backend will be 8000, this setup with `cors()` is usually fine for local dev.
 app.use(cors());
-
-// Parse JSON request bodies (e.g., for POST requests)
 app.use(express.json());
 
-// Define a root route for `/`
+// --- ROUTES ---
+
 app.get('/', (req, res) => {
-    res.send('Welcome to the API! Use /api/products to interact with products.');
+    res.send(`Welcome to the API! Server running on port ${PORT}. Use /api/products, /api/sales, or /api/reports.`);
 });
 
-// Mount your product routes under the '/api/products' base path.
 app.use('/api/products', productRoutes);
+app.use('/api/sales', saleRoutes);
+app.use('/api/reports', reportRoutes); // <--- NEW: Mount report routes under /api/reports
+app.use('/api/agreements', agreementRoutes); // ✨ NEW: Mount agreement routes under /api/agreements ✨
 
 // Global error handler middleware. This should be defined last.
 app.use(errorHandler);
 
 // --- SERVER START ---
-// Start the Express server
-console.log('--- Backend Server Starting NOW - Final Version ---');
+console.log('--- Backend Server Starting NOW ---');
 app.listen(PORT, () => {
-    console.log(`Server running: http://localhost:${PORT}`);
+    console.log(`Backend Server running: http://localhost:${PORT}`);
+    console.log(`Ensure your frontend proxy (vite.config.ts or direct calls) targets http://localhost:${PORT}`);
 });
